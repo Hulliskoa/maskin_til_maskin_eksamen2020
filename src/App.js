@@ -1,25 +1,38 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState, useEffect } from "react";
 
 function App() {
+  const [jsonResponse, setJsonResponse] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(
+        `http://localhost:9000/test`,
+        {
+          method: 'GET',
+          headers: new Headers({
+            Accept: 'application/json'
+          })
+        }
+    )
+        .then(res => res.json())
+        .then(response => {
+          setJsonResponse(response.a);
+          setIsLoading(false);
+        })
+        .catch(error => console.log(error));
+  });
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <div>
+        <h1> API calls with React Hooks </h1>
+        {isLoading && <p>Wait I'm Loading comments for you</p>}
+        {jsonResponse.length !== 0}
+        <p>{jsonResponse}</p>
+
+      </div>
   );
 }
 
 export default App;
+
