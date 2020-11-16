@@ -18,7 +18,9 @@
     "backendDep": "cd ./boat_share_backend && npm install  && cd .. & npm install",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "dev": "concurrently --kill-others \"npm start\" \"node ./boat_share_backend/bin/www\""
+    "client": "npm start",
+    "server": "cd boat_share_backend && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "eslintConfig": {
     "extends": [
@@ -40,5 +42,6 @@
   },
   "devDependencies": {
     "concurrently": "^5.3.0"
-  }
+  },
+  "proxy": "http://localhost:9000"
 }
