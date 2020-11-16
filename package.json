@@ -15,7 +15,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "backendDep": "npm install ./boat_share_backend",
+    "backendDep": "cd ./boat_share_backend && npm install  && cd .. & npm install",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "concurrently --kill-others \"npm start\" \"node ./boat_share_backend/bin/www\""
