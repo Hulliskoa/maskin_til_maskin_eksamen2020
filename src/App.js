@@ -7,7 +7,7 @@ function App() {
 
   useEffect(() => {
     fetch(
-        `http://localhost:9000/api/test`,
+        process.env.REACT_APP_API_URL + `/api/test`,
         {
           method: 'GET',
           headers: new Headers({
