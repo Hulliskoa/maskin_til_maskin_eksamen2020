@@ -7,7 +7,7 @@ function App() {
 
   useEffect(() => {
     fetch(
-        `http://localhost:9000/test`,
+        `http://localhost:9000/api/test`,
         {
           method: 'GET',
           headers: new Headers({
