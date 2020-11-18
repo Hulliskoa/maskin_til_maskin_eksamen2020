@@ -37,4 +37,7 @@ export const StyledBurger = styled.button`
       transform: ${({ open }) => open ? 'rotate(-45deg)' : 'rotate(0)'};
     }
   }
+  focus{
+     border: ${({ open }) => open ? "white" : "black"};
+  }
 `;

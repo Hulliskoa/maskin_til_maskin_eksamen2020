@@ -44,7 +44,7 @@ app.get("/events", (req, res) => {
     let eventInterval = setInterval(() => {
         res.write(`event: message\n`);
         res.write(`data: ${JSON.stringify(getData())}\n\n`);
-        console.log(JSON.stringify(getData()+ "\n\n"))
+        console.log(JSON.stringify(getData())+ "\n\n")
     }, 20000);
 
     req.on("close", (err) => {

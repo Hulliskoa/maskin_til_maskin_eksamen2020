@@ -7,7 +7,7 @@ const Burger = ({ open, setOpen, ...props }) => {
   const isExpanded = !!open;
   
   return (
-    <StyledBurger aria-label="Toggle menu" aria-expanded={isExpanded} open={open} onClick={() => setOpen(!open)} {...props}>
+    <StyledBurger style={{outline:"none"}} aria-label="Toggle menu" aria-expanded={isExpanded} open={open} onClick={() => setOpen(!open)} {...props}>
       <span />
       <span />
       <span />
