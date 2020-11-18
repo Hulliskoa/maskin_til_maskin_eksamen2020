@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors')
 const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const usersRouter = require('./routes/devices');
 const eventsRouter = require('./routes/events');
 const mqttClient = require('./mqtt/mqtt_backend')
 require('dotenv').config()
@@ -54,6 +54,6 @@ app.get("/events", (req, res) => {
 });
 
 app.use('/api', indexRouter);
-app.use('/users', usersRouter);
+app.use('/devices', usersRouter);
 
 module.exports = app;
