@@ -11,8 +11,8 @@ import MapContainer from "./GoogleMapsEmbed";
 
 
 function App() {
-  const [jsonResponse, setJsonResponse] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+ // const [jsonResponse, setJsonResponse] = useState([]);
+  //const [isLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
   const node = useRef();
   const menuId = "main-menu";
@@ -20,6 +20,7 @@ function App() {
   useOnClickOutside(node, () => setOpen(false));
 
   useEffect(() => {
+      /*
     fetch(
         process.env.REACT_APP_API_URL + `/api/test`,
         {
@@ -35,6 +36,7 @@ function App() {
           setIsLoading(false);
         })
         .catch(error => console.log(error));
+    */
   });
 
   return (
@@ -58,10 +60,6 @@ function App() {
           <div>
               <MapContainer/>
               <MqttListener />
-              {isLoading && <p>Wait I'm Loading comments for you</p>}
-              {jsonResponse.length !== 0}
-              <p>{jsonResponse}</p>
-
           </div>
       </ThemeProvider>
 
