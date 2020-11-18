@@ -30,7 +30,7 @@ app.use(express.json());
 
 app.get("/events", (req, res) => {
     res.set({
-        "Content-Type": "text/event-stream",
+        "Content-Type": "text/html",
         "Cache-Control": "no-cache",
         Connection: "keep-alive",
 
