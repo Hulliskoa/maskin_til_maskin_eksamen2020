@@ -1,25 +1,26 @@
-import { GoogleMap, LoadScript } from '@react-google-maps/api';
+import GoogleMapReact from 'google-map-react';
 import React from 'react';
-import Marker from './Marker';
 
-const apikey = process.env.REACT_APP_GOOGLE_API
+let coordinates = {
+    lat: 59.9233259, lng: 10.7705574
+}
+
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
 const MapContainer = () => {
 
 
-    let defaultCenter = {
-        lat: 41.3851, lng: 2.1734
-    }
+
 
     if ("geolocation" in navigator) {
         console.log("Available");
          navigator.geolocation.getCurrentPosition(function(position) {
             console.log("Latitude is :", position.coords.latitude);
-            defaultCenter.lat = position.coords.latitude
+             coordinates.lat = position.coords.latitude
             console.log("Longitude is :", position.coords.longitude);
-            defaultCenter.lng = position.coords.longitude
+             coordinates.lng = position.coords.longitude
         });
     } else {
-        console.log("Not Available");
+        console.log("Geolocation Not Available");
     }
 
     const mapStyles = {
@@ -30,20 +31,19 @@ const MapContainer = () => {
 
 
     return (
-        <LoadScript
-            googleMapsApiKey={apikey}>
-            <GoogleMap
-                mapContainerStyle={mapStyles}
-                zoom={13}
-                center={defaultCenter}
+    <div style={mapStyles}>
+        <GoogleMapReact
+            bootstrapURLKeys={{key:process.env.REACT_APP_GOOGLE_API}}
+            defaultCenter={coordinates}
+            defaultZoom={11}
+        >
+            <AnyReactComponent
+                lat={59.955413}
+                lng={30.337844}
+                text="My Marker"
             />
-            <Marker
-                lat={59.923353999999996}
-                lng={10.7706283}
-                name="My Marker"
-                color="blue"
-            />
-        </LoadScript>
+        </GoogleMapReact>
+    </div>
     )
 }
 
