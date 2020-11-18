@@ -54,6 +54,5 @@
     "dotenv": "^8.2.0",
     "fundamental-react": "^0.13.1",
     "prop-types": "^15.7.2"
-  },
-  "homepage": "209.97.133.143"
+  }
 }
