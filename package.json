@@ -11,6 +11,7 @@
     "bootstrap": "^4.5.3",
     "google-map-react": "^2.1.9",
     "google-maps-react": "^2.0.6",
+    "lodash.isempty": "^4.4.0",
     "node-sass": "^4.14.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",

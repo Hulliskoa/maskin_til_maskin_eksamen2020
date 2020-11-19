@@ -1,34 +1,42 @@
-var express = require('express');
-var router = express.Router();
-
+const express = require('express');
+const router = express.Router();
 let clients = [];
-
-
+let nests = [];
+const db = require("../database/db")
+let data = []
 router.get("/", (req, res) => {
-    res.set({
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
 
-        // enabling CORS
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers":
-            "Origin, X-Requested-With, Content-Type, Accept",
-    });
+    const headers = {
+        'Content-Type': 'text/event-stream',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache'
+    };
+    res.writeHead(200, headers);
+
 
     let eventInterval = setInterval(() => {
-        res.write(`event: message\n`);
-        res.write(`data: {a:"TEST"}}\n\n`);
-    }, 2000);
+        db.updateFromDB().then((r) => console.log(r))
+        data = `data: ${JSON.stringify(db.getAll())}\n\n`;
+        res.write(`event: message\n`)
+        res.write(data)
+    }, 5000);
 
-    req.on("close", (err) => {
-        clearInterval(eventInterval);
-        res.end();
+    // Generate an id based on timestamp and save res
+    // object of client connection on clients list
+    // Later we'll iterate it and send updates to each client
+    const clientId = Date.now();
+    const newClient = {
+        id: clientId,
+        res
+    };
+    clients.push(newClient);
+    // When client closes connection we update the clients list
+    // avoiding the disconnected one
+    req.on('close', () => {
+        console.log(`${clientId} Connection closed`);
+        clients = clients.filter(c => c.id !== clientId);
     });
 });
 
-function sendToAll(stream) {
-    clients.forEach(c => c.res.write(`data: ${JSON.stringify(stream)}\n\n`))
-}
 
 module.exports = router;
