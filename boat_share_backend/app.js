@@ -26,9 +26,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
-app.use('/events', eventsRouter);
+app.use('/api/events', eventsRouter);
 app.use('/api', indexRouter);
-app.use('/devices', usersRouter);
+app.use('/api/devices', usersRouter);
 
 
 
