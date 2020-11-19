@@ -14,7 +14,7 @@ const SimpleMap = (props) => {
 
     useEffect(() => {
         async function fetchMyAPI() {
-        let response =  await fetch(process.env.REACT_APP_API_URL + "/api/devices");
+        let response =  await fetch(process.env.REACT_APP_API_URL + process.env.REACT_APP_BACKEND_API +"/devices");
         const json = await response.json()
         setPlaces(...[json])
      }
@@ -22,7 +22,7 @@ const SimpleMap = (props) => {
     },[]);
 
     useEffect(() => {
-        let eventSource = new EventSource(process.env.REACT_APP_API_URL + "/api/events");
+        let eventSource = new EventSource(process.env.REACT_APP_API_URL + process.env.REACT_APP_BACKEND_API +"/events");
         eventSource.onmessage = e => {
             setPlaces([...JSON.parse(e.data)])
         }
