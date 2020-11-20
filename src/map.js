@@ -14,7 +14,7 @@ const SimpleMap = () => {
     const [places, setPlaces] = useState([])
 
     useEffect(() => {
-        const socket = openSocket(process.env.REACT_APP_API_URL);
+        const socket = openSocket(process.env.REACT_APP_SOCKET_URL);
         socket.on("FromAPI", data => {
             console.log(data)
             setPlaces([...data]);
