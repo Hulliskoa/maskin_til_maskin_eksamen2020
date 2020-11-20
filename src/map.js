@@ -8,22 +8,13 @@ const handleApiLoaded = (map, maps) =>{
 
 }
 
-const SimpleMap = (props) => {
+const SimpleMap = () => {
     const [center, setCenter] = useState({lat: 59.923063, lng: 10.772860});
     const [zoom] = useState(11);
     const [places, setPlaces] = useState([])
 
     useEffect(() => {
-        async function fetchMyAPI() {
-        let response =  await fetch(process.env.REACT_APP_API_URL + process.env.REACT_APP_BACKEND_API +"/devices");
-        const json = await response.json()
-        setPlaces(...[json])
-     }
-        fetchMyAPI()
-    },[]);
-
-    useEffect(() => {
-        const socket = openSocket(process.env.REACT_APP_SOCKET_URL);
+        const socket = openSocket(process.env.REACT_APP_API_URL);
         socket.on("FromAPI", data => {
             console.log(data)
             setPlaces([...data]);

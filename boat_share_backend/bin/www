@@ -5,7 +5,6 @@
  */
 const app = require('../app');
 const debug = require('debug')('boat-share-backend:server');
-const http = require('https');
 
 /**
  * Get port from environment and store in Express.
@@ -18,15 +17,14 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-const server = http.createServer(app);
+const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
   cors: {
     origin: '*',
   }
 });
-
 require('../routes/events')(io);
-io.listen(8000);
+
 /**
  * Listen on provided port, on all network interfaces.
  */

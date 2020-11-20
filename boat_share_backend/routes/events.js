@@ -1,10 +1,5 @@
-const express = require('express');
-const router = express.Router();
-const devices = require('../database/model')
-let clients = [];
-let nests = [];
 const db = require("../database/db")
-let data = []
+
 
 let interval;
 module.exports = function (io) {
