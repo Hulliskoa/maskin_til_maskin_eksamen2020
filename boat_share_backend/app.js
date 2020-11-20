@@ -1,4 +1,4 @@
-const express = require('express');
+
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
@@ -7,14 +7,11 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/devices');
 const eventsRouter = require('./routes/events');
 const mqttClient = require('./mqtt/mqtt_backend')
-const devices = require("./database/model");
-const db = require("./database/db")
+const express = require('express');
+
 require('dotenv').config()
-
+const app = express()
 mqttClient.connectToMqtt()
-
-const app = express();
-
 
 
 
@@ -29,7 +26,5 @@ app.use(express.json());
 app.use('/api/events', eventsRouter);
 //app.use('/api', indexRouter);
 app.use('/api/devices', usersRouter);
-
-
 
 module.exports = app;
