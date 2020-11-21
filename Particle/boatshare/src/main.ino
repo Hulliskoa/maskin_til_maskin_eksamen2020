@@ -16,9 +16,9 @@ void setup()
 
 void loop()
 {
+   mqtt.checkForNewMessages("/openDevice/1111");
    //sendPosition();
-   mqtt.readSerial();
-
+   //mqtt.readSerial();
 }
 
 void sendPosition()

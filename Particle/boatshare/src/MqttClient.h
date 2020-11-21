@@ -20,6 +20,7 @@ public:
    void setID(int id);
    void setupMqtt();
    void readSerial();
+   void checkForNewMessages(String subTopic);
    void publishData(String data, String topic);
 
 };

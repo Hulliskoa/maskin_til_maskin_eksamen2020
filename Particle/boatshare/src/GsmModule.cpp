@@ -51,6 +51,64 @@ void GsmModule::sendAndReadResponse(String command, int extraWaitInMillisecondsF
            }
 }
 
+char *GsmModule::returnPayload(String subTopic, String expected_answer, int timeout)
+{
+   int  x = 0, answer = 0;
+   char response[100];
+   long previous;
+   char payload[100];
+
+   memset(response, '\0', 100); // Initialize the string
+
+   delay(100);
+   while(Serial.available() > 0){ // Clean the input buffer
+         Serial.read();
+         }
+   while(Serial1.available() > 0){ // Clean the input buffer
+         Serial1.read();
+         }
+   String subLength = String(strlen(subTopic));
+
+   Serial1.println("AT+CMQTTSUBTOPIC=0," + subLength + ",1");   // Send the AT command
+   Serial1.println(subTopic);
+   x        = 0;
+   previous = millis();
+
+   // This loop waits for the answer
+   do {
+      if(Serial1.available() != 0){
+         // if there are data in the UART input buffer, reads it and checks for the answer
+         response[x] = Serial1.read();
+         Serial.print(response[x]);
+         x++;
+         // check if the desired answer is in the response of the module
+         if(strstr(response, expected_answer) != NULL){
+            Serial.print(response);
+            Serial.println("--- Matched response");
+            while(Serial1.available() > 0){
+                  Serial.println("--- Inside payload");
+                  char ch = Serial1.read();
+                  Serial.print(ch);
+                  int i = 0;
+                  if(ch == '\n'){
+                     memset(payload, '\0', 100);
+                     while((ch = Serial1.read()) != '\n'){
+                           payload[i] = ch;
+                           i++;
+                           }
+                     Serial.print(payload);
+                     Serial.println("<-- payload");
+                     }
+                  }
+            }
+         }
+      // Waits for the asnwer with time out
+      } while ((answer == 0) && ((millis() - previous) < timeout));
+
+   // SIM7600Serial->print("\n");
+   return(payload);
+}
+
 //https://gist.github.com/IdrisCytron/7ed2defe995cec8109efc5561fb00886
 int GsmModule::sendATcommand(String ATcommand, String expected_answer, int timeout)
 {

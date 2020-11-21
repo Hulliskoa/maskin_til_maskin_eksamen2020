@@ -20,6 +20,7 @@ router.get('/', async (req, res, next) => {
 
 const options = {
     qos: 1,
+    rap: 1
 
 };
 

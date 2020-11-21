@@ -39,10 +39,7 @@ void MqttClient::setupMqtt()
    publishData(payload, publish);
    publishData(json.stringifyJsonLocation("58.999210", "10.041967", this->id), "/addClient");
 
- String subLength = String(strlen(subscribe));
 
-   gsm.sendAndReadResponse("AT+CMQTTSUB=0,"+ subLength + ",1");
-   Serial1.print(subscribe);
 }
 
 void MqttClient::publishData(String data, String topic)
@@ -61,6 +58,18 @@ void MqttClient::publishData(String data, String topic)
 
    gsm.sendAndReadResponse("AT+CMQTTPUB=0,1,60");
    delay(1000);
+}
+
+void MqttClient::checkForNewMessages(String subTopic){
+    String subLength = String(strlen(subTopic));
+//"+CMQTTRXPAYLOAD:"
+gsm.returnPayload(subTopic, "+CMQTTRXPAYLOAD", 5000);
+  //  gsm.sendAndReadResponse("AT+CMQTTSUB=0,"+ subLength + ",1");
+    //Serial1.print(subTopic);
+  Serial1.println("AT+CMQTTUNSUB=0,"+ subLength + ",1");
+  //  readSerial();
+//  gsm.sendAndReadResponse("AT+CMQTTUNSUB=0,"+ subLength + ",1");
+  Serial1.print(subTopic);
 }
 
 // In the main loop, you can keep entering AT commands from your Serial Monitor
