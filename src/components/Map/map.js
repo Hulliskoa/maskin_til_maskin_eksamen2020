@@ -15,9 +15,10 @@ const SimpleMap = () => {
     useEffect(() => {
         const socket = openSocket(process.env.REACT_APP_SOCKET_URL);
         socket.on("FromAPI", data => {
+
             setPlaces([...data]);
         });
-    }, []);
+    }, [places]);
 
     return (
         <div style={{height: '50vh', width: '90vw'}}>

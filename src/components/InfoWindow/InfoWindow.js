@@ -30,7 +30,7 @@ const InfoWindow = (props) => {
         }).then(response => console.log(response))
     }
 
-    //Webseocket listener used for showing loading dots when button is clicked
+    //Websocket listener used for showing loading dots when button is clicked
     useEffect(() => {
         const socket = openSocket(process.env.REACT_APP_SOCKET_URL);
         socket.on("CanReserve", data => {
@@ -41,7 +41,8 @@ const InfoWindow = (props) => {
 
     //trigger rerender when cantSend status changes. Used to check if reserve/unreserve button can be clicked
     useEffect(() => {
-    }, [cantSend]);
+        setReserved(place.rentable);
+    }, []);
 
     //returns different values based on the condition the map marker is in
     if (!cantSend) {

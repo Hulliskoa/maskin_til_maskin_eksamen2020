@@ -5,6 +5,7 @@ MqttClient::MqttClient()
 {
    gsm = GsmModule();
    gps = GPS();
+   
 };
 
 
@@ -42,9 +43,7 @@ void MqttClient::setupMqtt()
 
    publishData(this->id, publish);
    publishData(json.stringifyJsonLocation(gps.getLat(), gps.getLng(), this->id, "online"), "/clientStatus");
-
-
-
+/*
    //set will message to give the server notice when the device lose connection
    gsm.sendAndReadResponse("AT+CMQTTWILLTOPIC=?");
    delay(1000);
@@ -59,6 +58,7 @@ void MqttClient::setupMqtt()
    delay(1000);
    gsm.sendAndReadResponse(willMessage);
    delay(1000);
+   */
 }
 
 void MqttClient::publishData(String data, String topic)
@@ -116,6 +116,7 @@ String MqttClient::checkTopicForRetainedMessages(String subTopic)
          Serial.print(responseBuffer[x]);
          x++;
 
+         //if the loop detects an ERROR in the buffer it will restart and resubscribe to teh topic
          if(strstr(responseBuffer, "ERROR") != NULL){
             while(Serial1.available() > 0){                            // Clean the input buffer
                   Serial1.read();
@@ -131,7 +132,8 @@ String MqttClient::checkTopicForRetainedMessages(String subTopic)
             delay(1000);
             Serial1.println(subTopic);
             memset(responseBuffer, '\n', 300);
-            x = 0;
+            previous = millis();
+            x        = 0;
             }
 
          //when the desired answer is found we know the next characters in line by reading the documentation: https://simcom.ee/documents/SIM7X00/SIM7500_SIM7600_SIM7800%20Series_MQTT_AT%20Command%20Manual_V1.00.pdf
@@ -164,7 +166,7 @@ String MqttClient::checkTopicForRetainedMessages(String subTopic)
                   }
             }
          }
-      } while (!answer && ((millis() - previous) < 600));
+      } while (!answer && ((millis() - previous) < 1000));
 
    //unsubscribe to topic to be able to do other things without overloading the buffer
    Serial1.println("AT+CMQTTUNSUBTOPIC=0," + subLength);

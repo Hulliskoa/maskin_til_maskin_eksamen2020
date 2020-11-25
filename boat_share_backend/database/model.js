@@ -11,7 +11,7 @@ let device = new Device(
         connectionStatus: String,
         owner: {type: String, default: "unkown"},
         currentUser: {type: String, default: "unkown"},
-        rentable: {type: String, default: "unkown"},
+        rentable: {type: Boolean},
         lastupdated: {type: Date, default: Date.now}
     },
     {collection: "Devices"}

@@ -3,6 +3,7 @@ const router = express.Router();
 const devices = require("../database/model")
 const mqtt = require('../mqtt/mqtt_backend')
 const bodyParser = require('body-parser');
+const db = require("../database/db")
 let cantClick = false;
 
 router.use(bodyParser.urlencoded({extended: true}));
@@ -23,6 +24,7 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', (req, res, next) => {
 
+
     const options = {
         qos: 1,
         retain : true
@@ -30,6 +32,7 @@ router.post('/', (req, res, next) => {
     if (!cantClick) {
         // console.log('Got body:', req.body.id);
         let clientID = (req.body.id).toString()
+        db.updateBoatStatus(clientID, req.body.open)
         mqtt.client.publish("/openDevice/" + clientID, (req.body.open).toString(), options)
         cantClick = true;
         res.write("Post request sent")

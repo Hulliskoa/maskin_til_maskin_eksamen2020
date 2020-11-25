@@ -22,12 +22,11 @@ String GPS::getLng()
 
 void GPS::setLat(String lat)
 {
-    //convert String to char array to be able to save the struct in EEPROM
+   //convert String to char array to be able to save the struct in EEPROM
    strcpy(devicePosition.lat, lat.c_str());
 };
 void GPS::setLng(String lng)
 {
-
    strcpy(devicePosition.lng, lng.c_str());
 };
 
@@ -100,7 +99,7 @@ bool GPS::getCurrentPosition()
                      answer = 1;
                      }
                   }
-               } while (answer == 0); // Waits for the asnwer with time out
+               } while (answer == 0);
 
             RecMessage[i] = '\0';
             Serial.print(RecMessage);
@@ -108,12 +107,15 @@ bool GPS::getCurrentPosition()
             //strstr Returns a pointer to the first occurrence of str2 in str1, or a null pointer if str2 is not part of str1. http://www.cplusplus.com/reference/cstring/strstr/
             if(strstr(RecMessage, ",,,,,,,,") != NULL){
                memset(RecMessage, '\0', 200);
-               return(false);
+               Serial.println("no sattelites found");
+               i      = 0;
+               answer = 0;
+               delay(1000);
                }
             else{
                 RecNull = false;
                 gsm.sendATcommand("AT+CGPS=0", "OK:", 1000);
-                //  mqtt.publishData("satellites found - getting location", "/devicePosition/" + String(this->id));
+                Serial.println("sattelites found");
                 }
             }
          else{
@@ -166,8 +168,6 @@ bool GPS::getCurrentPosition()
        }
 
    EEPROM.put(0, this->devicePosition);
-
-   //mqtt.publishData(json.stringifyJsonLocation(this->position.lat, this->position.lng, this->id, "online"), "/devicePosition");
 
    return(true);
 }

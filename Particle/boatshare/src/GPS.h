@@ -2,7 +2,6 @@
 #include "application.h"
 #include "Particle.h"
 #include "GsmModule.h"
-
 #include "JsonParser.h"
 
 /**

@@ -1,11 +1,12 @@
 #include "MqttClient.h"
 #include "GPS.h"
-
+#include "JsonParser.h"
 
 String     id    = System.deviceID();       //Use particle photon embedded id
 int        relay = D6;
 MqttClient mqtt;
 GPS        gps;
+JsonParser json;
 int        openOrClosed  = false;
 bool       setupComplete = false;
 
@@ -20,7 +21,8 @@ void loop()
 {
    //in the current version of the photon firmware EEPROM can not be manipulated in the setup function and thats why I moved most of the setup here
    if(!setupComplete){
-      gps = GPS();
+      gps  = GPS();
+      json = JsonParser();
       gps.initializeGPS();//Reads and writes to EEPROM
       mqtt = MqttClient();
       mqtt.setID(id);
@@ -30,7 +32,7 @@ void loop()
       }
 
    //checks mqtt broker for retained messages sent from nodejs server
-   String retainedMessage = mqtt.checkTopicForRetainedMessages("/openDevice/" + id);
+   String retainedMessage = mqtt.checkTopicForRetainedMessages("/openDevice/" + id); //
 
    if(retainedMessage == "1"){
       Serial.println("open");
@@ -50,5 +52,10 @@ void loop()
 
    delay(1000);
 
-   gps.getCurrentPosition();
+   if(gps.getCurrentPosition()){
+      mqtt.publishData(json.stringifyJsonLocation(gps.getLat(), gps.getLng(), id, "online"), "/clientStatus");
+    }else{
+      mqtt.publishData("not found", "/clientStatus");
+    }
+   ;
 }
