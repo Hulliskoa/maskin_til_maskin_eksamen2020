@@ -2,24 +2,24 @@ import React from 'react';
 import { bool } from 'prop-types';
 import { StyledMenu } from './Menu.styled';
 
-const Menu = ({ open, ...props }) => {
+const Menu = ({ setPage, open, ...props }) => {
   
   const isHidden = !!open;
   const tabIndex = isHidden ? 0 : -1;
 
   return (
     <StyledMenu open={open} aria-hidden={!isHidden} {...props}>
-      <a href="/" tabIndex={tabIndex}>
+        <a href="/" onClick={() => setPage(<p>HELLO</p>)} tabIndex={tabIndex}>
         <span aria-hidden="true">💁🏻‍♂️</span>
-        About us
+        Rent a boat
       </a>
       <a href="/" tabIndex={tabIndex}>
         <span aria-hidden="true">💸</span>
-        Pricing
+        My Boats
         </a>
       <a href="/" tabIndex={tabIndex}>
         <span aria-hidden="true">📩</span>
-        Contact
+        History
         </a>
     </StyledMenu>
   )

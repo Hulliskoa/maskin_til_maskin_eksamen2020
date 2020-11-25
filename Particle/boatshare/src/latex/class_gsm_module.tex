@@ -1,0 +1,42 @@
+\hypertarget{class_gsm_module}{}\doxysection{Gsm\+Module Class Reference}
+\label{class_gsm_module}\index{GsmModule@{GsmModule}}
+
+
+Handles the communication with the simcom 7600 module when no specific.  
+
+
+
+
+{\ttfamily \#include $<$Gsm\+Module.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_gsm_module_a2ae807f4a2446ba5d213fa6bc33f7591}{send\+And\+Read\+Response}} (String command, int extra\+Wait\+In\+Milliseconds\+For\+Response=200)
+\item 
+int \mbox{\hyperlink{class_gsm_module_aff70ba448de66cb642eb8103b891e687}{send\+A\+Tcommand}} (String A\+Tcommand, String expected\+\_\+answer, int timeout)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handles the communication with the simcom 7600 module when no specific. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_gsm_module_a2ae807f4a2446ba5d213fa6bc33f7591}\label{class_gsm_module_a2ae807f4a2446ba5d213fa6bc33f7591}} 
+\index{GsmModule@{GsmModule}!sendAndReadResponse@{sendAndReadResponse}}
+\index{sendAndReadResponse@{sendAndReadResponse}!GsmModule@{GsmModule}}
+\doxysubsubsection{\texorpdfstring{sendAndReadResponse()}{sendAndReadResponse()}}
+{\footnotesize\ttfamily void Gsm\+Module\+::send\+And\+Read\+Response (\begin{DoxyParamCaption}\item[{String}]{command,  }\item[{int}]{extra\+Wait\+In\+Milliseconds\+For\+Response = {\ttfamily 200} }\end{DoxyParamCaption})}
+
+Sends a specified A\+T-\/command, waits for the response and prints it to Serial. This is done without handling the response in any way. Written by\+: \href{https://github.com/jenschr}{\texttt{ https\+://github.\+com/jenschr}} and modified by me \mbox{\Hypertarget{class_gsm_module_aff70ba448de66cb642eb8103b891e687}\label{class_gsm_module_aff70ba448de66cb642eb8103b891e687}} 
+\index{GsmModule@{GsmModule}!sendATcommand@{sendATcommand}}
+\index{sendATcommand@{sendATcommand}!GsmModule@{GsmModule}}
+\doxysubsubsection{\texorpdfstring{sendATcommand()}{sendATcommand()}}
+{\footnotesize\ttfamily int Gsm\+Module\+::send\+A\+Tcommand (\begin{DoxyParamCaption}\item[{String}]{A\+Tcommand,  }\item[{String}]{expected\+\_\+answer,  }\item[{int}]{timeout }\end{DoxyParamCaption})}
+
+Sends a specified A\+T-\/command, waits for the response, prints and handles the expected return value Written by\+: \href{https://gist.github.com/IdrisCytron/7ed2defe995cec8109efc5561fb00886}{\texttt{ https\+://gist.\+github.\+com/\+Idris\+Cytron/7ed2defe995cec8109efc5561fb00886}} and modified by me 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Gsm\+Module.\+h\item 
+Gsm\+Module.\+cpp\end{DoxyCompactItemize}

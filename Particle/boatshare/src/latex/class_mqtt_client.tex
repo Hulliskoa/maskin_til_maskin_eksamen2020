@@ -1,0 +1,90 @@
+\hypertarget{class_mqtt_client}{}\doxysection{Mqtt\+Client Class Reference}
+\label{class_mqtt_client}\index{MqttClient@{MqttClient}}
+
+
+Handles all mqtt based communication between module and broker.  
+
+
+
+
+{\ttfamily \#include $<$Mqtt\+Client.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_mqtt_client_aae57cca56d9ffb8652097475b8887dbd}{set\+ID}} (String id)
+\item 
+void \mbox{\hyperlink{class_mqtt_client_a72d222975ea5a457590c8c5b7456afa3}{setup\+Mqtt}} ()
+\item 
+void \mbox{\hyperlink{class_mqtt_client_a50e367c8e261b86a3989d0bcb34aa584}{publish\+Data}} (String data, String topic)
+\item 
+String \mbox{\hyperlink{class_mqtt_client_add3d2e75d190007ccabdfaa4d9759bb6}{check\+Topic\+For\+Retained\+Messages}} (String sub\+Topic)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_mqtt_client_a10b6266ea8c5bcea8b921fc5738f87d8}\label{class_mqtt_client_a10b6266ea8c5bcea8b921fc5738f87d8}} 
+\mbox{\hyperlink{class_gsm_module}{Gsm\+Module}} {\bfseries gsm}
+\item 
+\mbox{\Hypertarget{class_mqtt_client_ac0075ac94c5cf239473dba3e9c9b7289}\label{class_mqtt_client_ac0075ac94c5cf239473dba3e9c9b7289}} 
+\mbox{\hyperlink{class_g_p_s}{G\+PS}} {\bfseries gps}
+\item 
+\mbox{\Hypertarget{class_mqtt_client_a38d5dcb93c1c66c1b29c5822d00ccedc}\label{class_mqtt_client_a38d5dcb93c1c66c1b29c5822d00ccedc}} 
+\mbox{\hyperlink{class_json_parser}{Json\+Parser}} {\bfseries json} = \mbox{\hyperlink{class_json_parser}{Json\+Parser}}()
+\item 
+\mbox{\Hypertarget{class_mqtt_client_a6f82ee8de887776eb3f0b1f698ba5898}\label{class_mqtt_client_a6f82ee8de887776eb3f0b1f698ba5898}} 
+String {\bfseries publish} = \char`\"{}/connected/\char`\"{}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handles all mqtt based communication between module and broker. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_mqtt_client_add3d2e75d190007ccabdfaa4d9759bb6}\label{class_mqtt_client_add3d2e75d190007ccabdfaa4d9759bb6}} 
+\index{MqttClient@{MqttClient}!checkTopicForRetainedMessages@{checkTopicForRetainedMessages}}
+\index{checkTopicForRetainedMessages@{checkTopicForRetainedMessages}!MqttClient@{MqttClient}}
+\doxysubsubsection{\texorpdfstring{checkTopicForRetainedMessages()}{checkTopicForRetainedMessages()}}
+{\footnotesize\ttfamily String Mqtt\+Client\+::check\+Topic\+For\+Retained\+Messages (\begin{DoxyParamCaption}\item[{String}]{sub\+Topic }\end{DoxyParamCaption})}
+
+Subscribes to the specified topic and checks for any retained messages from the broker This is a modified version of send\+A\+Tcommand() written by\+: \href{https://gist.github.com/IdrisCytron/7ed2defe995cec8109efc5561fb00886}{\texttt{ https\+://gist.\+github.\+com/\+Idris\+Cytron/7ed2defe995cec8109efc5561fb00886}} Modifications made with the help of simcom 7600 documentation\+: \href{https://simcom.ee/documents/SIM7X00/SIM7500_SIM7600_SIM7800\%20Series_MQTT_AT\%20Command\%20Manual_V1.00.pdf}{\texttt{ https\+://simcom.\+ee/documents/\+S\+I\+M7\+X00/\+S\+I\+M7500\+\_\+\+S\+I\+M7600\+\_\+\+S\+I\+M7800\%20\+Series\+\_\+\+M\+Q\+T\+T\+\_\+\+A\+T\%20\+Command\%20\+Manual\+\_\+\+V1.\+00.\+pdf}} 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em sub\+Topic} & data to be published as mqtt message \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_mqtt_client_a50e367c8e261b86a3989d0bcb34aa584}\label{class_mqtt_client_a50e367c8e261b86a3989d0bcb34aa584}} 
+\index{MqttClient@{MqttClient}!publishData@{publishData}}
+\index{publishData@{publishData}!MqttClient@{MqttClient}}
+\doxysubsubsection{\texorpdfstring{publishData()}{publishData()}}
+{\footnotesize\ttfamily void Mqtt\+Client\+::publish\+Data (\begin{DoxyParamCaption}\item[{String}]{data,  }\item[{String}]{topic }\end{DoxyParamCaption})}
+
+Publishes mqtt message to mqtt broker 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em data} & data to be published as mqtt message \\
+\hline
+\mbox{\texttt{ in}}  & {\em topic} & the mqtt topic used to publish at \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_mqtt_client_aae57cca56d9ffb8652097475b8887dbd}\label{class_mqtt_client_aae57cca56d9ffb8652097475b8887dbd}} 
+\index{MqttClient@{MqttClient}!setID@{setID}}
+\index{setID@{setID}!MqttClient@{MqttClient}}
+\doxysubsubsection{\texorpdfstring{setID()}{setID()}}
+{\footnotesize\ttfamily void Mqtt\+Client\+::set\+ID (\begin{DoxyParamCaption}\item[{String}]{id }\end{DoxyParamCaption})}
+
+Sets the member value id to the specified string value 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em id} & device id to be set \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_mqtt_client_a72d222975ea5a457590c8c5b7456afa3}\label{class_mqtt_client_a72d222975ea5a457590c8c5b7456afa3}} 
+\index{MqttClient@{MqttClient}!setupMqtt@{setupMqtt}}
+\index{setupMqtt@{setupMqtt}!MqttClient@{MqttClient}}
+\doxysubsubsection{\texorpdfstring{setupMqtt()}{setupMqtt()}}
+{\footnotesize\ttfamily void Mqtt\+Client\+::setup\+Mqtt (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Sets up communication with the mqttbroker by fetching network access and the connection to the mqtt broker Setup is done with the help of\+: \href{https://gist.github.com/jenschr/2d248362a4c3c5651145b5f009586513}{\texttt{ https\+://gist.\+github.\+com/jenschr/2d248362a4c3c5651145b5f009586513}} 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Mqtt\+Client.\+h\item 
+Mqtt\+Client.\+cpp\end{DoxyCompactItemize}

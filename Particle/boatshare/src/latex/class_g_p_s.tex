@@ -1,0 +1,106 @@
+\hypertarget{class_g_p_s}{}\doxysection{G\+PS Class Reference}
+\label{class_g_p_s}\index{GPS@{GPS}}
+
+
+Handles all gps related actions. This class also stores the latitude and longitude of the device.  
+
+
+
+
+{\ttfamily \#include $<$G\+P\+S.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \mbox{\hyperlink{class_g_p_s_aff0baccf06e636cde0ab8da2bf08ef4e}{set\+ID}} (String id)
+\item 
+String \mbox{\hyperlink{class_g_p_s_a89e13b6b1a5c3ac0df47e11f4ae2b0e1}{get\+Lat}} ()
+\item 
+String \mbox{\hyperlink{class_g_p_s_a97e57e4fdc5d6982025862fad76485bc}{get\+Lng}} ()
+\item 
+void \mbox{\hyperlink{class_g_p_s_aa22c8dc218de048ea1fa67cb8afe587a}{set\+Lat}} (String lat)
+\item 
+void \mbox{\hyperlink{class_g_p_s_ae578733b46944bd09cb619ce8de2ed16}{set\+Lng}} (String lng)
+\item 
+bool \mbox{\hyperlink{class_g_p_s_a87ae209c2c48038079e68c4e6af6b18f}{initialize\+G\+PS}} ()
+\item 
+bool \mbox{\hyperlink{class_g_p_s_a8016bb84bd30f86c50afdf0b00e945ca}{get\+Current\+Position}} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_g_p_s_a121e068a28234a63a2c6da73d11410ec}\label{class_g_p_s_a121e068a28234a63a2c6da73d11410ec}} 
+\mbox{\hyperlink{class_gsm_module}{Gsm\+Module}} {\bfseries gsm}
+\item 
+\mbox{\Hypertarget{class_g_p_s_a03232b7cb43455d197bf316675dcf035}\label{class_g_p_s_a03232b7cb43455d197bf316675dcf035}} 
+\mbox{\hyperlink{class_json_parser}{Json\+Parser}} {\bfseries json} = \mbox{\hyperlink{class_json_parser}{Json\+Parser}}()
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Handles all gps related actions. This class also stores the latitude and longitude of the device. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{class_g_p_s_a8016bb84bd30f86c50afdf0b00e945ca}\label{class_g_p_s_a8016bb84bd30f86c50afdf0b00e945ca}} 
+\index{GPS@{GPS}!getCurrentPosition@{getCurrentPosition}}
+\index{getCurrentPosition@{getCurrentPosition}!GPS@{GPS}}
+\doxysubsubsection{\texorpdfstring{getCurrentPosition()}{getCurrentPosition()}}
+{\footnotesize\ttfamily bool G\+P\+S\+::get\+Current\+Position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Checks if the gps can localize the device position. Written by\+: \href{https://gist.github.com/IdrisCytron/7ed2defe995cec8109efc5561fb00886}{\texttt{ https\+://gist.\+github.\+com/\+Idris\+Cytron/7ed2defe995cec8109efc5561fb00886}} and modified by me \mbox{\Hypertarget{class_g_p_s_a89e13b6b1a5c3ac0df47e11f4ae2b0e1}\label{class_g_p_s_a89e13b6b1a5c3ac0df47e11f4ae2b0e1}} 
+\index{GPS@{GPS}!getLat@{getLat}}
+\index{getLat@{getLat}!GPS@{GPS}}
+\doxysubsubsection{\texorpdfstring{getLat()}{getLat()}}
+{\footnotesize\ttfamily String G\+P\+S\+::get\+Lat (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Returns latitude stored in G\+P\+S\+::device\+Position as String type \mbox{\Hypertarget{class_g_p_s_a97e57e4fdc5d6982025862fad76485bc}\label{class_g_p_s_a97e57e4fdc5d6982025862fad76485bc}} 
+\index{GPS@{GPS}!getLng@{getLng}}
+\index{getLng@{getLng}!GPS@{GPS}}
+\doxysubsubsection{\texorpdfstring{getLng()}{getLng()}}
+{\footnotesize\ttfamily String G\+P\+S\+::get\+Lng (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Returns longitude stored in G\+P\+S\+::device\+Position as String type \mbox{\Hypertarget{class_g_p_s_a87ae209c2c48038079e68c4e6af6b18f}\label{class_g_p_s_a87ae209c2c48038079e68c4e6af6b18f}} 
+\index{GPS@{GPS}!initializeGPS@{initializeGPS}}
+\index{initializeGPS@{initializeGPS}!GPS@{GPS}}
+\doxysubsubsection{\texorpdfstring{initializeGPS()}{initializeGPS()}}
+{\footnotesize\ttfamily bool G\+P\+S\+::initialize\+G\+PS (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Initializes gps to be able to fetch position. This method also checks if there are any G\+P\+S\+::device\+Position stored in device\textquotesingle{}s E\+E\+P\+R\+OM. If not it creates a new object and stores it. The prosess is desribed here\+: \href{https://m2msupport.net/m2msupport/atcgps-start-stop-gps-session/}{\texttt{ https\+://m2msupport.\+net/m2msupport/atcgps-\/start-\/stop-\/gps-\/session/}} \mbox{\Hypertarget{class_g_p_s_aff0baccf06e636cde0ab8da2bf08ef4e}\label{class_g_p_s_aff0baccf06e636cde0ab8da2bf08ef4e}} 
+\index{GPS@{GPS}!setID@{setID}}
+\index{setID@{setID}!GPS@{GPS}}
+\doxysubsubsection{\texorpdfstring{setID()}{setID()}}
+{\footnotesize\ttfamily void G\+P\+S\+::set\+ID (\begin{DoxyParamCaption}\item[{String}]{id }\end{DoxyParamCaption})}
+
+Sets the member value id to the specified string value 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em id} & device id to be set \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_g_p_s_aa22c8dc218de048ea1fa67cb8afe587a}\label{class_g_p_s_aa22c8dc218de048ea1fa67cb8afe587a}} 
+\index{GPS@{GPS}!setLat@{setLat}}
+\index{setLat@{setLat}!GPS@{GPS}}
+\doxysubsubsection{\texorpdfstring{setLat()}{setLat()}}
+{\footnotesize\ttfamily void G\+P\+S\+::set\+Lat (\begin{DoxyParamCaption}\item[{String}]{lat }\end{DoxyParamCaption})}
+
+Set latitude Converts string int into an char array to be able to save it to E\+E\+P\+R\+OM later 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em lat} & device latitude in String format to be set in the G\+P\+S\+::device\+Position struct \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_g_p_s_ae578733b46944bd09cb619ce8de2ed16}\label{class_g_p_s_ae578733b46944bd09cb619ce8de2ed16}} 
+\index{GPS@{GPS}!setLng@{setLng}}
+\index{setLng@{setLng}!GPS@{GPS}}
+\doxysubsubsection{\texorpdfstring{setLng()}{setLng()}}
+{\footnotesize\ttfamily void G\+P\+S\+::set\+Lng (\begin{DoxyParamCaption}\item[{String}]{lng }\end{DoxyParamCaption})}
+
+Set longitude Converts string int into an char array to be able to save it to E\+E\+P\+R\+OM later 
+\begin{DoxyParams}[1]{Parameters}
+\mbox{\texttt{ in}}  & {\em lng} & device longitude in String format to be set in the G\+P\+S\+::device\+Position struct \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+G\+P\+S.\+h\item 
+G\+P\+S.\+cpp\end{DoxyCompactItemize}

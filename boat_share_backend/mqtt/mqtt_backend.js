@@ -1,7 +1,7 @@
 const mqtt = require('mqtt')
 const db = require("../database/db")
 
-
+// all mqtt subscriptions and publishing is handled here
 const options = {
     port: 15488,
     clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
@@ -11,14 +11,13 @@ const options = {
 };
 const client = mqtt.connect('mqtt://hairdresser.cloudmqtt.com', options)
 
-client.subscribe('/addClient', function () {
-    console.log("subscribed to /addClient")
-    // when a message arrives, do something with it
+client.subscribe('/clientStatus', function () {
+    console.log("subscribed to /clientStatus")
     client.on('message', function (topic, message) {
         if (message) {
             try {
                 let jsonMessage = JSON.parse(message)
-                db.findOrCreate(jsonMessage.id, jsonMessage.lat, jsonMessage.lng)
+                db.findOrCreate(jsonMessage.id, jsonMessage.lat, jsonMessage.lng, jsonMessage.connectionStatus)
             } catch (e) {
             }
         }
@@ -27,7 +26,6 @@ client.subscribe('/addClient', function () {
 
 client.subscribe('/connected', function () {
     console.log("subscribed to /connected")
-    // when a message arrives, do something with it
     client.on('message', function (topic, message) {
         console.log("Received '" + message + "' on '" + topic + "'");
     });
@@ -35,12 +33,13 @@ client.subscribe('/connected', function () {
 
 client.subscribe('/devicePosition', function () {
     console.log("subscribed to /devicePosition")
-    // when a message arrives, do something with it
     client.on('message', function (topic, message) {
         if (message) {
             try {
+                console.log(message)
                 let jsonMessage = JSON.parse(message)
-                db.findOrCreate(jsonMessage.id, jsonMessage.lat, jsonMessage.lng)
+                console.log(jsonMessage.connectionStatus)
+                db.findOrCreate(jsonMessage.id, jsonMessage.lat, jsonMessage.lng, jsonMessage.connectionStatus)
             } catch (e) {
             }
         }

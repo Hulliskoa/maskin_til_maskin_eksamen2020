@@ -1,10 +1,8 @@
-
-import React, {useState} from 'react';
 import './Marker.css';
 
 
 const Marker = (props) => {
-    const { color, name, id , onClick} = props;
+    const { color, name , onClick} = props;
     return (
         <div>
             <div

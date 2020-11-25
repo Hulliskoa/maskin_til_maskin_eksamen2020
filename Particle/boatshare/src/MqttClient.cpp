@@ -1,29 +1,32 @@
 #include "MqttClient.h"
 
+
 MqttClient::MqttClient()
 {
    gsm = GsmModule();
+   gps = GPS();
 };
 
-// Setup is done with the help of:
-// https://gist.github.com/jenschr/2d248362a4c3c5651145b5f009586513
+
+void MqttClient::setID(String id)
+{
+   this->id = id;
+}
+
 void MqttClient::setupMqtt()
 {
-   pinMode(D7, OUTPUT);
-   Serial.begin(115200);
-   Serial1.begin(115200);
-
    for(int i = 8; i > 0; i--){
        Serial.println("Wait " + String(i) + " boring seconds for the green LED to turn on");
        delay(1000);
        }
 
-   // Creates random clientID
-   String clientId = "ParticleClient-";
+   // Creates random clientID for each connection
+   String clientId = "BoatDevice-";
 
    clientId += String(random(0xffff), HEX);
 
-   // Pin deactivated for sim-card!!
+   //Setup to connect to network and mqttbroker
+   // Deactivate pin on simcard for this code to work!----------------
    gsm.sendAndReadResponse("AT");
    gsm.sendAndReadResponse("AT+CFUN=1");
    gsm.sendAndReadResponse("AT+CSQ");
@@ -36,10 +39,26 @@ void MqttClient::setupMqtt()
    gsm.sendAndReadResponse("AT+CMQTTACCQ=0,\"" + clientId + "\"");
    gsm.sendAndReadResponse("AT+CMQTTCONNECT=0,\"tcp://hairdresser.cloudmqtt.com:15488\",60, 0,\"hwxtryvm\",\"Bga5mnvq1sxC\"");
 
-   publishData(payload, publish);
-   publishData(json.stringifyJsonLocation("58.999210", "10.041967", this->id), "/addClient");
+
+   publishData(this->id, publish);
+   publishData(json.stringifyJsonLocation(gps.getLat(), gps.getLng(), this->id, "online"), "/clientStatus");
 
 
+
+   //set will message to give the server notice when the device lose connection
+   gsm.sendAndReadResponse("AT+CMQTTWILLTOPIC=?");
+   delay(1000);
+   gsm.sendAndReadResponse("AT+CMQTTWILLTOPIC=0,13");
+   delay(1000);
+   gsm.sendAndReadResponse("/clientStatus");
+   delay(1000);
+   String willMessage = json.stringifyJsonLocation(gps.getLat(), gps.getLng(), this->id, "offline");
+   String willLength  = String(strlen(willMessage));
+
+   gsm.sendAndReadResponse("AT+CMQTTWILLMSG=0," + willLength + ",1");
+   delay(1000);
+   gsm.sendAndReadResponse(willMessage);
+   delay(1000);
 }
 
 void MqttClient::publishData(String data, String topic)
@@ -60,53 +79,99 @@ void MqttClient::publishData(String data, String topic)
    delay(1000);
 }
 
-void MqttClient::checkForNewMessages(String subTopic){
-    String subLength = String(strlen(subTopic));
-//"+CMQTTRXPAYLOAD:"
-gsm.returnPayload(subTopic, "+CMQTTRXPAYLOAD", 5000);
-  //  gsm.sendAndReadResponse("AT+CMQTTSUB=0,"+ subLength + ",1");
-    //Serial1.print(subTopic);
-  Serial1.println("AT+CMQTTUNSUB=0,"+ subLength + ",1");
-  //  readSerial();
-//  gsm.sendAndReadResponse("AT+CMQTTUNSUB=0,"+ subLength + ",1");
-  Serial1.print(subTopic);
-}
-
-// In the main loop, you can keep entering AT commands from your Serial Monitor
-void MqttClient::readSerial()
+String MqttClient::checkTopicForRetainedMessages(String subTopic)
 {
-   /* send everything received from the SIM7600
-    * to usb serial & vice versa */
-   if(Serial.available() > 0){
-      Serial.print(">");
+   int    x      = 0;
+   bool   answer = false;
+   char   responseBuffer[300];//increased buffersize because of trouble with buffer overflowing
+   long   previous;
+   char   payload[100];
+   String expected_answer = "+CMQTTRXPAYLOAD: 0,"; //the response from the module that tells us the mqtt message payload is incoming
 
-      while(Serial.available()){
-            char ch = Serial.read();
-            Serial.print(ch);
-            Serial1.print(ch);
+   memset(responseBuffer, '\0', 300);
+   memset(payload, '\0', 100);
+
+   while(Serial1.available() > 0){                             // Clean the input buffer
+         Serial1.read();
+         }
+
+   String subLength = String(strlen(subTopic));
+
+   Serial1.println("AT+CMQTTSUB=0," + subLength + ",1"); // Send length of topic to subscribe to
+   delay(1000);
+   Serial1.println(subTopic);                            //send actual topic
+
+   previous = millis();
+
+
+   do {
+      if(Serial1.available() != 0){
+         //reset response index and set all to null to avoid memory leak and crash if large amount of data comes through buffer
+         if(x > 299){
+            memset(responseBuffer, '\0', 300);
+            x = 0;
             }
-      }
 
-   if(Serial1.available() > 0){
-      Serial.print(":");
+         responseBuffer[x] = Serial1.read();
+         Serial.print(responseBuffer[x]);
+         x++;
 
-      while(Serial1.available()){
-            char ch = Serial1.read();
+         if(strstr(responseBuffer, "ERROR") != NULL){
+            while(Serial1.available() > 0){                            // Clean the input buffer
+                  Serial1.read();
+                  }
 
-            if(ch){
-               Serial.print(ch);
-               }
+            Serial1.println("AT+CMQTTUNSUBTOPIC=0," + subLength);
+            delay(1000);
+            Serial1.println(subTopic);
+            delay(600);
+            Serial1.println("AT+CMQTTUNSUB=0,0");
+            delay(600);
+            Serial1.println("AT+CMQTTSUB=0," + subLength + ",1"); // Send length of topic to subscribe to
+            delay(1000);
+            Serial1.println(subTopic);
+            memset(responseBuffer, '\n', 300);
+            x = 0;
             }
-      }
 
-   // blink the LED, just to show we are alive
-   if(counter % 1000 == 0){
-      digitalWrite(D7, !digitalRead(D7));
-      }
-   counter++;
-}
+         //when the desired answer is found we know the next characters in line by reading the documentation: https://simcom.ee/documents/SIM7X00/SIM7500_SIM7600_SIM7800%20Series_MQTT_AT%20Command%20Manual_V1.00.pdf
+         if(strstr(responseBuffer, expected_answer) != NULL){
+            Serial.println(responseBuffer);
+            while(Serial1.available() > 0 && !answer){
+                  char ch = Serial1.read();
+                  char payLoadLengthAscii[4];
+                  memset(payLoadLengthAscii, '\0', 4);
+                  int z = 0;
+                  while(ch != '\r'){
+                        payLoadLengthAscii[z] = ch;
+                        ch = Serial1.read();
+                        z++;
+                        }
+                  Serial1.read();                               //reads '\n' from buffer
+                  int payLoadLength = atoi(payLoadLengthAscii); //http://www.cplusplus.com/reference/cstdlib/atoi/
+                  //next characters will be the actual mqtt payload
+                  //source: 2.3.2.2 Receive publish message from MQTT server.
+                  for(int i = 0; i <= payLoadLength; i++){
+                      if(i == payLoadLength || (i > 99)){
+                         answer = true;
+                         break;
+                         }
+                      else{
+                          ch         = Serial1.read();
+                          payload[i] = ch;
+                          }
+                      }
+                  }
+            }
+         }
+      } while (!answer && ((millis() - previous) < 600));
 
-void MqttClient::setID(int id)
-{
-   this->id = id;
+   //unsubscribe to topic to be able to do other things without overloading the buffer
+   Serial1.println("AT+CMQTTUNSUBTOPIC=0," + subLength);
+   delay(1000);
+   Serial1.println(subTopic);
+   delay(600);
+   Serial1.println("AT+CMQTTUNSUB=0,0");
+   delay(600);
+   return(payload);
 }

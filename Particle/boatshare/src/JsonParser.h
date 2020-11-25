@@ -1,11 +1,16 @@
 // had problems with the json libraries so i had to create som functions myself
 #pragma once
-
+/**
+ * \brief Class for parsing data into json format to be sent with mqtt
+ */
 class JsonParser {
 public:
 
-   String stringifyJsonLocation(String lat, String lng, int id)
+  /**
+   * Parse input to correct json format for the nodejs server to be able to read later
+   */
+   String stringifyJsonLocation(String lat, String lng, String id, String connectionStatus)
    {
-      return("{\"id\":\"" + String(id) + "\",\"lat\":\"" + lat + "\", \"lng\":\"" + lng + "\" }");
+      return("{\"id\":\"" + id + "\",\"lat\":\"" + lat + "\", \"lng\":\"" + lng + "\",\"connectionStatus\":\""+connectionStatus+"\"}");
    };
 };

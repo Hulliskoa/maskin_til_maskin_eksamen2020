@@ -2,6 +2,9 @@ const device = require("./model");
 const mongoose = require("mongoose");
 let uri = "mongodb://localhost:27017/boatshare";
 
+
+// Handles all database queries
+
 let currentDB = [];
 mongoose.connect(uri, {useUnifiedTopology: true, useNewUrlParser: true, useFindAndModify: false});
 
@@ -10,9 +13,9 @@ connection.once("open", function () {
     console.log("MongoDB database connection established successfully");
 });
 
-function findOrCreate(id, lat, lng) {
+function findOrCreate(id, lat, lng, connectionStatus) {
     let conditions = {_id: id}
-    let update = {lat: lat, lng: lng}
+    let update = {lat: lat, lng: lng, connectionStatus:connectionStatus}
     let options = {upsert: true};
     device.findOneAndUpdate(conditions, update, options, function (error, result) {
         if (error) return;
