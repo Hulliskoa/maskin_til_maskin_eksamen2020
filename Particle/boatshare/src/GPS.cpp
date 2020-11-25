@@ -22,7 +22,7 @@ String GPS::getLng()
 
 void GPS::setLat(String lat)
 {
-   //convert String to char array to be able to save the struct in EEPROM
+   //convert String to char array to be able to save the struct in EEPROM when this is implemented
    strcpy(devicePosition.lat, lat.c_str());
 };
 void GPS::setLng(String lng)
@@ -33,17 +33,7 @@ void GPS::setLng(String lng)
 //https://m2msupport.net/m2msupport/atcgps-start-stop-gps-session/
 bool GPS::initializeGPS()
 {
-   position value;
-
-   EEPROM.get(0, value);
-
-
-   if(value.lat == "0"){
-      value = devicePosition;
-      }
-   else{
-       devicePosition = value;
-       }
+   //TODO: Check EEPROM for saved coordinates
 
    gsm.sendAndReadResponse("AT+CGPS=?");
    delay(2000);
@@ -66,10 +56,10 @@ bool GPS::getCurrentPosition()
    bool    RecNull = true;
    int     i       = 0;
    long    previous;
-   char    RecMessage[200];
+   char    responseBuffer[200];
    char    LatDD[3], LatMM[10], LogDD[4], LogMM[10];
 
-   memset(RecMessage, '\0', 200);
+   memset(responseBuffer, '\0', 200);
    memset(LatDD, '\0', 3);
    memset(LatMM, '\0', 10);
    memset(LogDD, '\0', 4);
@@ -80,7 +70,7 @@ bool GPS::getCurrentPosition()
          }
 
    previous = millis();
-   while(RecNull){
+   while(RecNull && ((millis() - previous) < 2000)){
          answer = gsm.sendATcommand("AT+CGPSINFO", "+CGPSINFO: ", 1000); // start GPS session, standalone mode
 
          if(answer == 1){
@@ -92,22 +82,22 @@ bool GPS::getCurrentPosition()
             do {
                // if there are data in the UART input buffer, reads it and checks for the asnwer
                if(Serial1.available() > 0){
-                  RecMessage[i] = Serial1.read();
+                  responseBuffer[i] = Serial1.read();
                   i++;
                   // check if the desired answer (OK) is in the response of the module
-                  if(strstr(RecMessage, "OK") != NULL){
+                  if(strstr(responseBuffer, "OK") != NULL){
                      answer = 1;
                      }
                   }
                } while (answer == 0);
 
-            RecMessage[i] = '\0';
-            Serial.print(RecMessage);
+            responseBuffer[i] = '\0';
+            Serial.print(responseBuffer);
             Serial.print("\n");
             //strstr Returns a pointer to the first occurrence of str2 in str1, or a null pointer if str2 is not part of str1. http://www.cplusplus.com/reference/cstring/strstr/
-            if(strstr(RecMessage, ",,,,,,,,") != NULL){
-               memset(RecMessage, '\0', 200);
-               Serial.println("no sattelites found");
+            if(strstr(responseBuffer, ",,,,,,,,") != NULL){
+               memset(responseBuffer, '\0', 200);
+               Serial.println("no satelites found");
                i      = 0;
                answer = 0;
                delay(1000);
@@ -115,7 +105,7 @@ bool GPS::getCurrentPosition()
             else{
                 RecNull = false;
                 gsm.sendATcommand("AT+CGPS=0", "OK:", 1000);
-                Serial.println("sattelites found");
+
                 }
             }
          else{
@@ -125,49 +115,49 @@ bool GPS::getCurrentPosition()
          delay(2000);
          }
 
-   strncpy(LatDD, RecMessage, 2);
+   strncpy(LatDD, responseBuffer, 2);
    LatDD[2] = '\0';
 
-   strncpy(LatMM, RecMessage + 2, 9);
+   strncpy(LatMM, responseBuffer + 2, 9);
    LatMM[9] = '\0';
 
    this->setLat(String(atoi(LatDD) + (atof(LatMM) / 60)));
-   if(RecMessage[12] == 'N'){
+   if(responseBuffer[12] == 'N'){
       Serial.print("Latitude is ");
-      Serial.print(this->devicePosition.lat);
+      Serial.print(devicePosition.lat);
       Serial.print(" N\n");
       }
-   else if(RecMessage[12] == 'S'){
+   else if(responseBuffer[12] == 'S'){
            Serial.print("Latitude is ");
-           Serial.print(this->devicePosition.lat);
+           Serial.print(devicePosition.lat);
            Serial.print(" S\n");
            }
    else{
        return(false);
        }
 
-   strncpy(LogDD, RecMessage + 14, 3);
+   strncpy(LogDD, responseBuffer + 14, 3);
    LogDD[3] = '\0';
 
-   strncpy(LogMM, RecMessage + 17, 9);
+   strncpy(LogMM, responseBuffer + 17, 9);
    LogMM[9] = '\0';
 
    this->setLng(String(atoi(LogDD) + (atof(LogMM) / 60)));
-   if(RecMessage[27] == 'E'){
+   if(responseBuffer[27] == 'E'){
       Serial.print("Longitude is ");
-      Serial.print(this->devicePosition.lng);
+      Serial.print(devicePosition.lng);
       Serial.print(" E\n");
       }
-   else if(RecMessage[27] == 'W'){
+   else if(responseBuffer[27] == 'W'){
            Serial.print("Latitude is ");
-           Serial.print(this->devicePosition.lat);
+           Serial.print(devicePosition.lat);
            Serial.print(" W\n");
            }
    else{
        return(false);
        }
 
-   EEPROM.put(0, this->devicePosition);
+
 
    return(true);
 }

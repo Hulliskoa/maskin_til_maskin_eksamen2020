@@ -17,9 +17,10 @@ Den vil deretter dukke opp i løsningen så fort gps-signal er funnet
 ### 1.0 Particle Photon
 
 Som standard ligger det en bredde og lengdegrad i Oslo inne i kildekoden.
-Dette er kun for å vise at det fungerer selv om man ikke har oppnådd kontakt med GPS da dette krever at man går ut.
+Dette er kun for å vise at det fungerer selv om man ikke har oppnådd kontakt med noen satelitter da dette krever at man går ut.
+Med en gang en "ekte" posisjon er oppnådd vil denne ta over for dummy-posisjonen
+Jeg hadde et ønske om å lagre siste kjente posisjon til EEPROM på photonen, men dette har jeg dessverre ikke fått til enda.
 
-Med en gang en "ekte" posisjon er oppnådd vil denne bli lagret i EEPROM og deremd være der ved neste boot. 
 
 Alle klasser og metoder er dokumentert ved hjelp av doxygen og alt ligger vedlagt.
 Se index.html filen som ligger i /boat_share/Particle/src/html
@@ -83,14 +84,29 @@ Hver gang en klient kobler seg opp mot tjeneren opprettes de nødvendige websock
 ##### 2.3.3 mqtt.js (mqtt.js 2020)
 Kommunikasjon med cloudMqtt gjøres med mqtt.js biblioteket. 
 Hver gang en bruker trykker på knappen for å låse/låse opp en båt sendes det en mqtt melding til cloudmqtt.
-Hver device har sitt eget topic /openDevice/[id]
+Hver device har sitt eget topic /openDevice/[id] og /clientStatus/[id] som serveren lytter til på det overordnede emnet. 
+Eksmpler på data som sendes fra serveren til klienten er:
+
+```
+/openDevice/38002b000447373336323230	message: 1 //Dette gir photon med id 38002b000447373336323230 beskjed om å aktivere releet og åpne låsen
+/openDevice/38002b000447373336323230	message: 0 //Motsatt av meldingen over
+```
+Eksempler på meldinger fra photonen:
+```
+topic: /connected/	message:38002b000447373336323230 //sendes når photonen har bootet opp. Benyttes ikke av nodejs serveren for øyeblikket
+topic: /clientStatus	message: {"id":"38002b000447373336323230","lat":"59.923420", "lng":"10.770557","connectionStatus":"online"} // sendes med jevne mellomrom for å gi status om posisjon til serveren
+topic: /deviceStatus/38002b000447373336323230	message: open // Viser at låsen er åpen. //benyttes kun til debuging for øyeblikket
+topic: /deviceStatus/38002b000447373336323230	message: closed // Viser at låsen er åpen. //benyttes kun til debuging for øyeblikket
+topic: /clientStatus	message: sattelites not found for device: 38002b000447373336323230 //benyttes kun til debuging for øyeblikket
+```
 Denne meldingen sendes med retain flagget slik at particle photonen alltid vil få beskjed om den siste meldingen som ble sendt
 uavhenging om den var online på det tidspunktet meldingen ble sendt.
 
 
 
 Ved boot sender også photonen informason om seg selv til mqtt serveren. Dette leses av nodejs serveren som derretter oppdaterer dataene i databasen. 
-I tillegg legger photonen inn et såkalt last will. Dette er en melding som sendes hvis photonen kobler fra mqtt serveren på feil måte.
+I tillegg har jeg forsøkt å legge opp last will melding for photonen, men det virker ikke som cloudmqtt lar meg gjøre dette.
+Dette er en melding som skal sendes hvis photonen kobler fra mqtt serveren på feil måte.
 I dette tilfellet blir det sendt informasjon fdra mqtt serveren til nodejs servere om at photonen her offline.
 
 ##### 2.3.4 Mongoose og lagring av data

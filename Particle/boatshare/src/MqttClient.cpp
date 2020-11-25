@@ -5,7 +5,6 @@ MqttClient::MqttClient()
 {
    gsm = GsmModule();
    gps = GPS();
-   
 };
 
 
@@ -17,7 +16,7 @@ void MqttClient::setID(String id)
 void MqttClient::setupMqtt()
 {
    for(int i = 8; i > 0; i--){
-       Serial.println("Wait " + String(i) + " boring seconds for the green LED to turn on");
+       Serial.println(String(i) + " seconds -  waiting for lte module to activate");
        delay(1000);
        }
 
@@ -43,22 +42,25 @@ void MqttClient::setupMqtt()
 
    publishData(this->id, publish);
    publishData(json.stringifyJsonLocation(gps.getLat(), gps.getLng(), this->id, "online"), "/clientStatus");
-/*
+
    //set will message to give the server notice when the device lose connection
-   gsm.sendAndReadResponse("AT+CMQTTWILLTOPIC=?");
+   String willTopic       = "/clientStatus";
+   String willTopicLength = String(strlen(willTopic));
+
+   gsm.sendAndReadResponse("AT+CMQTTWILLTOPIC=0," + willTopicLength);
    delay(1000);
-   gsm.sendAndReadResponse("AT+CMQTTWILLTOPIC=0,13");
+   gsm.sendAndReadResponse(willTopic);
    delay(1000);
-   gsm.sendAndReadResponse("/clientStatus");
+   gsm.sendAndReadResponse("AT+CMQTTWILLMSG=?");
    delay(1000);
+
    String willMessage = json.stringifyJsonLocation(gps.getLat(), gps.getLng(), this->id, "offline");
    String willLength  = String(strlen(willMessage));
 
    gsm.sendAndReadResponse("AT+CMQTTWILLMSG=0," + willLength + ",1");
+   delay(600);
+   gsm.sendAndReadResponse(willMessage, 2000);
    delay(1000);
-   gsm.sendAndReadResponse(willMessage);
-   delay(1000);
-   */
 }
 
 void MqttClient::publishData(String data, String topic)

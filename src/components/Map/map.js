@@ -18,6 +18,10 @@ const SimpleMap = () => {
 
             setPlaces([...data]);
         });
+    }, []);
+
+    useEffect(() => {
+
     }, [places]);
 
     return (
@@ -44,7 +48,7 @@ const SimpleMap = () => {
                                         setSelectedPlace(place);
                                     }
                                 }}
-                            />) : console.log(place.connectionStatus)
+                            />) : ""
                     )
 
                 ))}

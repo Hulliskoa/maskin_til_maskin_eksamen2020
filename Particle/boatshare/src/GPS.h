@@ -7,10 +7,11 @@
 /**
  *  \brief struct containing the position of a device. the data needs to be organized this way to easily get and put to and from EEPROM.
  */
-struct position
+struct Position
 {
-   char lat[10] = "59.910060";
-   char lng[10] = "10.731413";
+   char    lat[10];
+   char    lng[10];
+   uint8_t isSet;
 };
 
 /**
@@ -19,7 +20,11 @@ struct position
 class GPS {
 private:
    String id;               /*!< the unique device id. Initialized in main.ino*/
-   position devicePosition; /*!< used to store the last known position of the device*/
+   Position devicePosition = {
+      "59.911125",//Coordinates to Høyskolen Kristiania
+      "10.744678",
+      1,
+   }; /*!< used to store the last known position of the device*/
 
 public:
    GsmModule gsm;

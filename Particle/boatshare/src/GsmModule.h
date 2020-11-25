@@ -13,7 +13,7 @@ public:
    GsmModule();
    /**
     * Sends a specified AT-command, waits for the response and prints it to Serial. This is done without handling the response in any way.
-    * Written by: https://github.com/jenschr and modified by me
+    * Written by: https://github.com/jenschr
     */
    void sendAndReadResponse(String command, int extraWaitInMillisecondsForResponse = 200);
 

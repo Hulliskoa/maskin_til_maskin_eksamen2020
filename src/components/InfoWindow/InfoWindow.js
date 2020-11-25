@@ -42,7 +42,7 @@ const InfoWindow = (props) => {
     //trigger rerender when cantSend status changes. Used to check if reserve/unreserve button can be clicked
     useEffect(() => {
         setReserved(place.rentable);
-    }, []);
+    }, [place.rentable]);
 
     //returns different values based on the condition the map marker is in
     if (!cantSend) {

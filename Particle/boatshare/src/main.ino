@@ -9,12 +9,13 @@ GPS        gps;
 JsonParser json;
 int        openOrClosed  = false;
 bool       setupComplete = false;
-
+long       previous;
 void setup()
 {
    Serial.begin(115200);
    Serial1.begin(115200);
    pinMode(relay, OUTPUT);
+   previous = millis();
 }
 
 void loop()
@@ -50,12 +51,18 @@ void loop()
        Serial.println("no change");
        }
 
-   delay(1000);
 
-   if(gps.getCurrentPosition()){
-      mqtt.publishData(json.stringifyJsonLocation(gps.getLat(), gps.getLng(), id, "online"), "/clientStatus");
-    }else{
-      mqtt.publishData("not found", "/clientStatus");
-    }
-   ;
+
+   //check for position every ten seconds
+   if((millis() - previous) > 20000){
+
+      if(gps.getCurrentPosition()){
+         mqtt.publishData(json.stringifyJsonLocation(gps.getLat(), gps.getLng(), id, "online"), "/clientStatus");
+         }
+      else{
+          mqtt.publishData("sattelites not found for device: " + id, "/clientStatus");
+          }
+          previous = millis();
+      }
+
 }
