@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import GoogleMapReact from 'google-map-react';
-import Marker from './components/Marker/Marker';
+import Marker from '../Marker/Marker';
 import openSocket from "socket.io-client";
-import InfoWindow from "./components/InfoWindow/InfoWindow";
+import InfoWindow from "../InfoWindow/InfoWindow";
 
 //map component used on main page
 const SimpleMap = () => {
@@ -11,7 +11,7 @@ const SimpleMap = () => {
     const [places, setPlaces] = useState([])
     const [selectedPlace, setSelectedPlace] = useState(null);
 
-
+    //waits for events from server via websocket. All data about the different boats come through here
     useEffect(() => {
         const socket = openSocket(process.env.REACT_APP_SOCKET_URL);
         socket.on("FromAPI", data => {

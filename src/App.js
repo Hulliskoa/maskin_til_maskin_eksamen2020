@@ -6,7 +6,7 @@ import {Burger, Menu} from './components';
 import FocusLock from 'react-focus-lock';
 import {useOnClickOutside} from './hooks';
 import {GlobalStyles} from './global';
-import SimpleMap from './map';
+import SimpleMap from './components/Map/map';
 
 
 function App() {
