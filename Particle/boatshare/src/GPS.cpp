@@ -70,7 +70,7 @@ bool GPS::getCurrentPosition()
          }
 
    previous = millis();
-   while(RecNull && ((millis() - previous) < 2000)){
+   while(RecNull && ((millis() - previous) < 4000)){
          answer = gsm.sendATcommand("AT+CGPSINFO", "+CGPSINFO: ", 1000); // start GPS session, standalone mode
 
          if(answer == 1){
