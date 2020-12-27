@@ -207,7 +207,7 @@ npm -v
     ```
    REACT_APP_API_URL=http://localhost:9000
    REACT_APP_SOCKET_URL=http://localhost:9000
-   REACT_APP_GOOGLE_API=AIzaSyB2r-AEmG4oEQEykJhplJ6F83GEdoIYetE
+   REACT_APP_GOOGLE_API=[INPUT GOOGLE API KEY]
    REACT_APP_BACKEND_API=
    ```
     - /boat_share/boat_share_backend/.env
